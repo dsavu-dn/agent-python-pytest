@@ -9,8 +9,7 @@ from typing import List, Any, Optional, Set, Dict, Tuple
 
 from _pytest.doctest import DoctestItem
 from aenum import auto, Enum, unique
-from pytest import Class, Function, Module, Package, Item, Session, \
-    PytestWarning
+from pytest import Class, Function, Module, Package, Item, Session
 from reportportal_client.core.rp_issues import Issue, ExternalIssue
 
 from .config import AgentConfig
@@ -367,10 +366,10 @@ class PyTestServiceClass:
             name = name[:MAX_ITEM_NAME_LENGTH - len(TRUNCATION_STR)] + \
                    TRUNCATION_STR
             log.warning(
-                PytestWarning(
-                    'Test leaf ID was truncated to "{}" because of name size '
-                    'constrains on Report Portal'.format(name)
-                )
+
+                'Test leaf ID was truncated to "{}" because of name size '
+                'constrains on Report Portal'.format(name)
+                
             )
         return name
 
