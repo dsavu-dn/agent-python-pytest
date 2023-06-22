@@ -282,7 +282,7 @@ class PyTestServiceClass:
                 self._remove_root_dirs(child_leaf, max_dir_level,
                                        new_level)
 
-    def _generate_names(self, test_tree):
+    def _generate_names(self, test_tree, list_of_something=[]):
         if test_tree['type'] == LeafType.ROOT:
             test_tree['name'] = 'root'
 
@@ -298,9 +298,11 @@ class PyTestServiceClass:
                 test_tree['name'] = os.path.split(str(item.fspath))[1]
             else:
                 test_tree['name'] = item.name
+                list_of_something.append(test_tree["children"])
 
         for item, child_leaf in test_tree['children'].items():
             self._generate_names(child_leaf)
+        return list_of_something
 
     def _merge_leaf_type(self, test_tree, leaf_type, separator):
         child_items = list(test_tree['children'].items())
@@ -346,13 +348,18 @@ class PyTestServiceClass:
 
         # Create a test tree to be able to apply mutations
         test_tree = self._build_test_tree(session)
-        self._remove_root_package(test_tree)
-        self._remove_root_dirs(test_tree, self._config.rp_dir_level)
-        self._generate_names(test_tree)
-        if not self._config.rp_hierarchy_dirs:
-            self._merge_dirs(test_tree)
-        if not self._config.rp_hierarchy_code:
-            self._merge_code(test_tree)
+        # self._remove_root_package(test_tree)
+        # self._remove_root_dirs(test_tree, self._config.rp_dir_level)
+        test_items = self._generate_names(test_tree)
+        test_items = [item for item in test_items if item]
+        result = {}
+        for dictionary in test_items:
+            result.update(dictionary)
+        # if not self._config.rp_hierarchy_dirs:
+        #     self._merge_dirs(test_tree)
+        # if not self._config.rp_hierarchy_code:
+        #     self._merge_code(test_tree)
+        test_tree["children"] = result
         self._build_item_paths(test_tree, [])
 
     def _get_item_name(self, name):

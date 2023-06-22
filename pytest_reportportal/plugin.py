@@ -269,7 +269,8 @@ def pytest_runtest_protocol(item):
                                filter_client_logs=True,
                                endpoint=agent_config.rp_endpoint,
                                ignored_record_names=('reportportal_client',
-                                                     'pytest_reportportal'))
+                                                     'pytest_reportportal'),
+                               py_test_service=service)
     log_format = agent_config.rp_log_format
     if log_format:
         log_handler.setFormatter(logging.Formatter(log_format))
